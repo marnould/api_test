@@ -1,0 +1,4 @@
+App\Entity\User:
+  user_{1..10}:
+    email (unique): <email()>
+    password: \$2y\$13\$1tk/aZk.vJIQlw6ecgtbZe5nmhMcKu0rLCUhrJu2k0T/3.DO/TiXm

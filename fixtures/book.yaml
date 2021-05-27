@@ -1,0 +1,5 @@
+App\Entity\Book:
+  book_{1..10}:
+    title: <title()>
+    content: <paragraphs(1, true)>
+    owner: '@user_$current'
