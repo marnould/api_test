@@ -14,7 +14,6 @@ security:
     firewalls:
       # Order of conf block is important
       # 1) Specific, 2) Generic
-
       dev:
           pattern: ^/(_(profiler|wdt)|css|images|js)/
           security: false
@@ -51,3 +50,4 @@ security:
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
+        #- { path: ^/api, roles: IS_AUTHENTICATED_FULLY }

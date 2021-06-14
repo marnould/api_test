@@ -88,6 +88,9 @@
     "fakerphp/faker": {
         "version": "v1.14.1"
     },
+    "firebase/php-jwt": {
+        "version": "v5.2.1"
+    },
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.5"
     },
@@ -98,7 +101,10 @@
             "branch": "master",
             "version": "2.2",
             "ref": "cad41ef93d6150067ae2bb3c7fd729492dff6f0a"
-        }
+        },
+        "files": [
+            "config/packages/fos_rest.yaml"
+        ]
     },
     "hautelook/alice-bundle": {
         "version": "2.1",
@@ -168,6 +174,15 @@
     },
     "php": {
         "version": "7.4"
+    },
+    "phpdocumentor/reflection-common": {
+        "version": "2.2.0"
+    },
+    "phpdocumentor/reflection-docblock": {
+        "version": "5.2.2"
+    },
+    "phpdocumentor/type-resolver": {
+        "version": "1.4.0"
     },
     "psr/cache": {
         "version": "1.0.1"
@@ -380,6 +395,12 @@
     "symfony/security-http": {
         "version": "v5.2.9"
     },
+    "symfony/serializer": {
+        "version": "v5.2.9"
+    },
+    "symfony/serializer-pack": {
+        "version": "v1.0.4"
+    },
     "symfony/service-contracts": {
         "version": "v2.4.0"
     },
@@ -443,6 +464,9 @@
     },
     "twig/twig": {
         "version": "v3.3.2"
+    },
+    "webmozart/assert": {
+        "version": "1.10.0"
     },
     "willdurand/jsonp-callback-validator": {
         "version": "v1.1.0"
