@@ -3,8 +3,8 @@
 
 namespace App\Controller\Api;
 
+use App\Entity\User;
 use App\Manager\BookManager;
-use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -13,17 +13,19 @@ use Symfony\Component\Serializer\SerializerInterface;
  * Class BookController
  * @package App\Controller\Api
  */
-class BookController extends AbstractFOSRestController
+class BookController extends AbstractController
 {
+    /** @var BookManager $bookManager */
     private BookManager $bookManager;
-    private SerializerInterface $sfSerializer;
 
     /**
      * BookController constructor.
      */
-    public function __construct(BookManager $bookManager, SerializerInterface $sfSerializer){
+    public function __construct(BookManager $bookManager, SerializerInterface $serializer)
+    {
+        parent::__construct($serializer);
+
         $this->bookManager = $bookManager;
-        $this->sfSerializer = $sfSerializer;
     }
 
     /**
@@ -31,18 +33,14 @@ class BookController extends AbstractFOSRestController
      */
     public function getBooks()
     {
-        $booksData = $this->bookManager->findAll();
+        /** @var User $user */
+        $user = $this->getUser();
 
-
+        $booksData = $this->bookManager->getByUser($user);
 
         // Vanilla API use case (without FosRestBundle)
-        //$dataResponse = $this->sfSerializer->serialize($booksData, 'json', ['groups' => ['books']]);
-        //return new Response($dataResponse, Response::HTTP_OK, ['content-type'=> "application/json"]);
-
-        $view = $this->view($booksData, 200);
-
-        return $this->handleView($view);
-
+        $dataResponse = $this->sfSerializer->serialize($booksData, 'json', ['groups' => ['books']]);
+        return new Response($dataResponse, Response::HTTP_OK, ['content-type' => "application/json"]);
     }
 
 }

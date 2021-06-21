@@ -94,18 +94,6 @@
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.5"
     },
-    "friendsofsymfony/rest-bundle": {
-        "version": "2.2",
-        "recipe": {
-            "repo": "github.com/symfony/recipes-contrib",
-            "branch": "master",
-            "version": "2.2",
-            "ref": "cad41ef93d6150067ae2bb3c7fd729492dff6f0a"
-        },
-        "files": [
-            "config/packages/fos_rest.yaml"
-        ]
-    },
     "hautelook/alice-bundle": {
         "version": "2.1",
         "recipe": {
@@ -345,6 +333,9 @@
     "symfony/polyfill-php80": {
         "version": "v1.22.1"
     },
+    "symfony/polyfill-php81": {
+        "version": "v1.23.0"
+    },
     "symfony/profiler-pack": {
         "version": "v1.0.5"
     },
@@ -467,11 +458,5 @@
     },
     "webmozart/assert": {
         "version": "1.10.0"
-    },
-    "willdurand/jsonp-callback-validator": {
-        "version": "v1.1.0"
-    },
-    "willdurand/negotiation": {
-        "version": "3.0.0"
     }
 }

@@ -1,4 +1,5 @@
 security:
+    enable_authenticator_manager: true
     encoders:
         App\Entity\User:
             algorithm: bcrypt
@@ -23,11 +24,15 @@ security:
           pattern: ^/api/login
           stateless: true
           provider: app_user_provider
-          anonymous: true
           json_login:
               check_path: /api/login_check
               success_handler: lexik_jwt_authentication.handler.authentication_success
               failure_handler: lexik_jwt_authentication.handler.authentication_failure
+
+       # Permet de faire un POST create user sans le token (Normalement, il n'y a pas besoin de créer ce block)
+#      create_user:
+#          pattern: ^/api/users
+#          security: false
 
       # Order of conf block is important
       # In case of api project, we can replace main by api
@@ -49,5 +54,5 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
-        #- { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/users, roles: PUBLIC_ACCESS, methods: [POST] }
+        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }

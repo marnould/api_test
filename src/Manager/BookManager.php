@@ -4,7 +4,9 @@
 namespace App\Manager;
 
 use App\Entity\Book;
+use App\Entity\User;
 use App\Repository\BookRepository;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Class BookManager
@@ -25,8 +27,16 @@ class BookManager
     /**
      * @return Book[]
      */
-    public function findAll()
+    public function getAll()
     {
         return $this->bookRepo->findAll();
+    }
+
+    /**
+     * getByUser
+     */
+    public function getByUser(UserInterface $user) // Reccommandé de toujours passer par des interfaces au lieu de passer par l'implementation
+    {
+        return $this->bookRepo->findBy(["owner" => $user]);
     }
 }

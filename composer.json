@@ -15,7 +15,6 @@
         "doctrine/doctrine-migrations-bundle": "^3.1",
         "doctrine/orm": "^2.9",
         "firebase/php-jwt": "^5.2",
-        "friendsofsymfony/rest-bundle": "^3.0",
         "lexik/jwt-authentication-bundle": "^2.11",
         "phpdocumentor/reflection-docblock": "^5.2",
         "symfony/console": "*",
