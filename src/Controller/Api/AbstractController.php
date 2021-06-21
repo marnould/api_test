@@ -3,10 +3,8 @@
 namespace App\Controller\Api;
 
 use App\Entity\EntityInterface;
-use Doctrine\ORM\EntityManagerInterface;
-use \Symfony\Bundle\FrameworkBundle\Controller\AbstractController as BaseAbstractController;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController as BaseAbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
 // Bonne pratique : Renommer la class initiale avec Base
