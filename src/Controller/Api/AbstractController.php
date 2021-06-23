@@ -32,59 +32,80 @@ abstract class AbstractController extends BaseAbstractController
      */
     public function createdResponse(EntityInterface $entity)
     {
-        return new Response(
-            $this->sfSerializer->serialize(
-                [
-                    'status' => 'success',
-                    'data' => $entity
-                ]
-                ,
-                'json', ['groups' => ['user_details']]),
-            Response::HTTP_CREATED
-        );
-    }
-
-    public function successResponse()
-    {
-        // Code 200 -> Ok
-    }
-
-    public function failResponse()
-    {
-        // Code 400 ou 422 -> Probleme de validation
-    }
-
-    public function errorResponse()
-    {
-        // Code range 500groupes
-    }
-
-    public function notFoundResponse()
-    {
-        // Code 404
-    }
-
-    public function forbiddenResponse()
-    {
-        // Code 403
+        return $this->response($entity, Response::HTTP_CREATED, 'success', ['user_details']);
     }
 
     /**
+     * @param EntityInterface $entity
      * @return Response
-     *
-     * @Todo Rajouter en param le status code, le status(success, failed, error), options (groupes)
      */
-    private function response()
+    public function successResponse(EntityInterface $entity)
+    {
+        // Code 200 -> Ok
+        return $this->response($entity, Response::HTTP_OK, 'success', ['user_details']);
+    }
+
+    /**
+     * @param EntityInterface $entity
+     * @return Response
+     */
+    public function failResponse(EntityInterface $entity)
+    {
+        // Code 400 ou 422 -> Probleme de validation
+        return $this->response($entity, Response::HTTP_BAD_REQUEST, 'failed', ['user_details']);
+
+    }
+
+    /**
+     * @param EntityInterface $entity
+     * @return Response
+     */
+    public function errorResponse(EntityInterface $entity)
+    {
+        // Code range 500groupes
+        return $this->response($entity, Response::HTTP_INTERNAL_SERVER_ERROR, 'error', ['user_details']);
+    }
+
+    /**
+     * @param EntityInterface $entity
+     * @return Response
+     */
+    public function notFoundResponse(EntityInterface $entity)
+    {
+        // Code 404
+        return $this->response($entity, Response::HTTP_NOT_FOUND, 'error', ['user_details']);
+    }
+
+    /**
+     * @param EntityInterface $entity
+     *
+     * @return Response
+     */
+    public function forbiddenResponse(EntityInterface $entity)
+    {
+        // Code 403
+        return $this->response($entity, Response::HTTP_FORBIDDEN, 'error', ['user_details']);
+    }
+
+    /**
+     * @param EntityInterface $entity
+     * @param int $statusCode
+     * @param string $status
+     * @param array $groups
+     *
+     * @return Response
+     */
+    private function response(EntityInterface $entity, int $statusCode, string $status, array $groups = [])
     {
         return new Response(
             $this->sfSerializer->serialize(
                 [
-                    'status' => 'success',
-                    'data' => $entity
+                    'status' => $status,
+                    'data' => $entity,
                 ]
                 ,
-                'json', ['groups' => ['user_details']]),
-            Response::HTTP_CREATED
+                'json', ['groups' => $groups]),
+            $statusCode
         );
     }
 }
