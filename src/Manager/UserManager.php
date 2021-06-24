@@ -27,6 +27,19 @@ class UserManager
 
     /**
      * @param User $user
+     *
+     * @return User
+     */
+    public function createUser(User $user) : User
+    {
+        $user->setPassword($this->encryptPassword($user));
+        $this->persistFlush($user);
+
+        return $user;
+    }
+
+    /**
+     * @param User $user
      * @return string
      */
     public function encryptPassword(User $user)

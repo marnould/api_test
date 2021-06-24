@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Controller\Api;
 
 use App\Entity\User;
@@ -8,20 +7,25 @@ use App\Manager\UserManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class UserController extends AbstractController
 {
     /** @var UserManager $userManager */
     private UserManager $userManager;
 
+    /** @var ValidatorInterface $validator */
+    private ValidatorInterface $validator;
+
     /**
      * UserController constructor.
      */
-    public function __construct(UserManager $userManager, SerializerInterface $serializer)
+    public function __construct(UserManager $userManager, SerializerInterface $serializer, ValidatorInterface $validator)
     {
         parent::__construct($serializer);
 
         $this->userManager = $userManager;
+        $this->validator = $validator;
     }
 
     /**
@@ -29,17 +33,21 @@ class UserController extends AbstractController
      *
      * @Route(name="api_create_user", path="/users", methods={"POST"})
      */
-    public function createUser(Request $request)
+    public function createUserAction(Request $request)
     {
         $body = $request->getContent();
 
         /** @var User $user */
         $user = $this->sfSerializer->deserialize($body, User::class, 'json');
 
-        $user->setPassword($this->userManager->encryptPassword($user));
+        $validationConstraint = $this->validator->validate($user);
 
-        $this->userManager->persistFlush($user);
+        if ($validationConstraint->count() > 0) {
+            return $this->failResponse($validationConstraint);
+        }
 
-        return $this->createdResponse($user);
+        $createdUser = $this->userManager->createUser($user);
+
+        return $this->createdResponse($createdUser);
     }
 }

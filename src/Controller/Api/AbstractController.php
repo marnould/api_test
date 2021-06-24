@@ -3,9 +3,14 @@
 namespace App\Controller\Api;
 
 use App\Entity\EntityInterface;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController as BaseAbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Validator\ConstraintValidator;
+use Symfony\Component\Validator\ConstraintValidatorInterface;
+use Symfony\Component\Validator\ConstraintViolationList;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 // Bonne pratique : Renommer la class initiale avec Base
 
@@ -46,13 +51,15 @@ abstract class AbstractController extends BaseAbstractController
     }
 
     /**
-     * @param EntityInterface $entity
+     * @param $validatorConstraint
+     *
      * @return Response
+     * @throws Exception
      */
-    public function failResponse(EntityInterface $entity)
+    public function failResponse($validatorConstraint)
     {
         // Code 400 ou 422 -> Probleme de validation
-        return $this->response($entity, Response::HTTP_BAD_REQUEST, 'failed', ['user_details']);
+        return $this->response($this->iterateOnConstraintViolations($validatorConstraint), Response::HTTP_BAD_REQUEST, 'failed', ['user_details']);
 
     }
 
@@ -88,14 +95,14 @@ abstract class AbstractController extends BaseAbstractController
     }
 
     /**
-     * @param EntityInterface $entity
+     * @param $entity
      * @param int $statusCode
      * @param string $status
      * @param array $groups
      *
      * @return Response
      */
-    private function response(EntityInterface $entity, int $statusCode, string $status, array $groups = [])
+    private function response($entity, int $statusCode, string $status, array $groups = []): Response
     {
         return new Response(
             $this->sfSerializer->serialize(
@@ -107,5 +114,22 @@ abstract class AbstractController extends BaseAbstractController
                 'json', ['groups' => $groups]),
             $statusCode
         );
+    }
+
+    /**
+     * @param ConstraintViolationList $constraints
+     *
+     * @return array
+     * @throws Exception
+     */
+    protected function iterateOnConstraintViolations(ConstraintViolationList $constraints): array
+    {
+        $errorArray = [];
+
+        foreach ($constraints->getIterator() as $constraint) {
+           $errorArray[$constraint->getPropertyPath()] =  $constraint->getMessage();
+        }
+
+        return $errorArray;
     }
 }
