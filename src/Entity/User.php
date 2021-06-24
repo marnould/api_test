@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
@@ -26,6 +27,9 @@ class User implements UserInterface, EntityInterface
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      * @Groups({"books", "user_details"})
+     *
+     * @Assert\NotBlank()
+     * @Assert\Email(message = "The email '{{ value }}' is not a valid email.")
      */
     private $email;
 
@@ -38,6 +42,8 @@ class User implements UserInterface, EntityInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
+     *
+     * @Assert\NotBlank()
      */
     private $password;
 

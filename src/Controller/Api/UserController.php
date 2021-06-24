@@ -40,6 +40,6 @@ class UserController extends AbstractController
 
         $this->userManager->persistFlush($user);
 
-        $this->createdResponse($user);
+        return $this->createdResponse($user);
     }
 }
