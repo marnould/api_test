@@ -11,14 +11,15 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class UserController extends AbstractController
 {
-    /** @var UserManager $userManager */
     private UserManager $userManager;
-
-    /** @var ValidatorInterface $validator */
     private ValidatorInterface $validator;
 
     /**
      * UserController constructor.
+     *
+     * @param UserManager $userManager
+     * @param SerializerInterface $serializer
+     * @param ValidatorInterface $validator
      */
     public function __construct(UserManager $userManager, SerializerInterface $serializer, ValidatorInterface $validator)
     {
@@ -48,6 +49,6 @@ class UserController extends AbstractController
 
         $createdUser = $this->userManager->createUser($user);
 
-        return $this->createdResponse($createdUser);
+        return $this->createdResponse($createdUser, ['groups' => ['user_details']]);
     }
 }

@@ -7,10 +7,7 @@ use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController as BaseAbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Validator\ConstraintValidator;
-use Symfony\Component\Validator\ConstraintValidatorInterface;
 use Symfony\Component\Validator\ConstraintViolationList;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 // Bonne pratique : Renommer la class initiale avec Base
 
@@ -35,19 +32,19 @@ abstract class AbstractController extends BaseAbstractController
     /**
      * @return Response
      */
-    public function createdResponse(EntityInterface $entity)
+    public function createdResponse(EntityInterface $entity, array $options = [])
     {
-        return $this->response($entity, Response::HTTP_CREATED, 'success', ['user_details']);
+        return $this->response($entity, Response::HTTP_CREATED, 'success', $options);
     }
 
     /**
      * @param EntityInterface $entity
      * @return Response
      */
-    public function successResponse(EntityInterface $entity)
+    public function successResponse(EntityInterface $entity, array $options = [])
     {
         // Code 200 -> Ok
-        return $this->response($entity, Response::HTTP_OK, 'success', ['user_details']);
+        return $this->response($entity, Response::HTTP_OK, 'success', $options);
     }
 
     /**
@@ -56,10 +53,10 @@ abstract class AbstractController extends BaseAbstractController
      * @return Response
      * @throws Exception
      */
-    public function failResponse($validatorConstraint)
+    public function failResponse($validatorConstraint, array $options = [])
     {
         // Code 400 ou 422 -> Probleme de validation
-        return $this->response($this->iterateOnConstraintViolations($validatorConstraint), Response::HTTP_BAD_REQUEST, 'failed', ['user_details']);
+        return $this->response($this->iterateOnConstraintViolations($validatorConstraint), Response::HTTP_BAD_REQUEST, 'failed', $options);
 
     }
 
@@ -67,20 +64,20 @@ abstract class AbstractController extends BaseAbstractController
      * @param EntityInterface $entity
      * @return Response
      */
-    public function errorResponse(EntityInterface $entity)
+    public function errorResponse(EntityInterface $entity, array $options = [])
     {
-        // Code range 500groupes
-        return $this->response($entity, Response::HTTP_INTERNAL_SERVER_ERROR, 'error', ['user_details']);
+        // Code range 500
+        return $this->response($entity, Response::HTTP_INTERNAL_SERVER_ERROR, 'error', $options);
     }
 
     /**
      * @param EntityInterface $entity
      * @return Response
      */
-    public function notFoundResponse(EntityInterface $entity)
+    public function notFoundResponse(EntityInterface $entity, array $options = [])
     {
         // Code 404
-        return $this->response($entity, Response::HTTP_NOT_FOUND, 'error', ['user_details']);
+        return $this->response($entity, Response::HTTP_NOT_FOUND, 'error', $options);
     }
 
     /**
@@ -88,21 +85,21 @@ abstract class AbstractController extends BaseAbstractController
      *
      * @return Response
      */
-    public function forbiddenResponse(EntityInterface $entity)
+    public function forbiddenResponse(EntityInterface $entity, array $options = [])
     {
         // Code 403
-        return $this->response($entity, Response::HTTP_FORBIDDEN, 'error', ['user_details']);
+        return $this->response($entity, Response::HTTP_FORBIDDEN, 'error', $options);
     }
 
     /**
      * @param $entity
      * @param int $statusCode
      * @param string $status
-     * @param array $groups
+     * @param array $options
      *
      * @return Response
      */
-    private function response($entity, int $statusCode, string $status, array $groups = []): Response
+    private function response($entity, int $statusCode, string $status, array $options = []): Response
     {
         return new Response(
             $this->sfSerializer->serialize(
@@ -111,7 +108,8 @@ abstract class AbstractController extends BaseAbstractController
                     'data' => $entity,
                 ]
                 ,
-                'json', ['groups' => $groups]),
+                'json',
+                $options),
             $statusCode
         );
     }
@@ -127,7 +125,7 @@ abstract class AbstractController extends BaseAbstractController
         $errorArray = [];
 
         foreach ($constraints->getIterator() as $constraint) {
-           $errorArray[$constraint->getPropertyPath()] =  $constraint->getMessage();
+            $errorArray[$constraint->getPropertyPath()] = $constraint->getMessage();
         }
 
         return $errorArray;

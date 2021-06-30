@@ -13,16 +13,13 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
  */
 class UserManager
 {
-    /** @var EntityManagerInterface $em */
-    private EntityManagerInterface $em;
-
-    /** @var UserPasswordEncoderInterface $passwordEncoder */
     private UserPasswordEncoderInterface $passwordEncoder;
+    private DoctrineManager $dm;
 
-    public function __construct(EntityManagerInterface $em, UserPasswordEncoderInterface $passwordEncoder)
+    public function __construct(UserPasswordEncoderInterface $passwordEncoder, DoctrineManager $dm)
     {
-        $this->em = $em;
         $this->passwordEncoder = $passwordEncoder;
+        $this->dm = $dm;
     }
 
     /**
@@ -33,7 +30,7 @@ class UserManager
     public function createUser(User $user) : User
     {
         $user->setPassword($this->encryptPassword($user));
-        $this->persistFlush($user);
+        $this->dm->persistFlush($user);
 
         return $user;
     }
@@ -45,15 +42,5 @@ class UserManager
     public function encryptPassword(User $user)
     {
         return $this->passwordEncoder->encodePassword($user, $user->getPassword());
-    }
-
-    /**
-     * @param User $user
-     */
-    public function persistFlush(User $user)
-    {
-        // @TODO : Passer le persistFlush dans un AbstractManager
-        $this->em->persist($user);
-        $this->em->flush();
     }
 }

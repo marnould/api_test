@@ -4,10 +4,13 @@ namespace App\Entity;
 
 use App\Repository\BookRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=BookRepository::class)
+ * @UniqueEntity({"title"})
  */
 class Book implements EntityInterface
 {
@@ -15,19 +18,24 @@ class Book implements EntityInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups("books")
+     * @Groups("books", "book_details")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups("books")
+     * @Groups("books", "book_details")
+     *
+     * @Assert\NotBlank
+     * @Assert\Length(max=255)
+     * @Assert\Regex("/^[\d\w_\-]+$/", message="You only can use the _ and the - as special character")
      */
     private $title;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups("books")
+     * @Groups("books", "book_details")
+     * @Assert\Length (min=10, max=255)
      */
     private $content;
 
